@@ -8,13 +8,14 @@ class Api::V6::AuthController < ApplicationController
 
       vPlatform = platform()
 
-      if !params[:vPhone].blank?
+      case devise = params[:vPhone] || params[:vFacebookId] || params[:vGoogleId]
+      when params[:vPhone]
         # SignIn/SignUp via Mobile
         return login_with_mobile(vDeviceVersion,vOSVersion,vPlatform)
-      elsif !params[:vFacbookId].blank?
+        when params[:vFacbookId]
         # SignIn/SignUp via Facebook
         return login_with_facebook(vDeviceVersion,vOSVersion,vPlatform)
-      elsif !params[:vGoogleId].blank?
+        when params[:vGoogleId]
         # SignIn/SignUp via Google+
         return login_with_google(vDeviceVersion,vOSVersion,vPlatform)
       end
