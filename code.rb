@@ -2,26 +2,11 @@ class Api::V6::AuthController < ApplicationController
   def signin
     begin
       User.where(vDeviceToken: params[:vDeviceToken]).update_all(login_status: false, vDeviceToken: "") unless params[:vDeviceToken].blank?
-      vDeviceVersion = ""
-      if params[:vDeviceVersion]
-        vDeviceVersion = params[:vDeviceVersion]
-      elsif params[:vIPhoneVersion]
-        vDeviceVersion = params[:vIPhoneVersion]
-      end
+      vDeviceVersion = device_version()
 
-      vOSVersion = ""
-      if params[:vOSVersion]
-        vOSVersion = params[:vOSVersion]
-      elsif params[:vIOSVersion]
-        vOSVersion = params[:vIOSVersion]
-      end
+      vOSVersion = os_version()
 
-      vPlatform = ""
-      if params[:vPlatform]
-        vPlatform = params[:vPlatform]
-      else
-        vPlatform = "301"
-      end
+      vPlatform = platform()
 
       if !params[:vPhone].blank?
         # SignIn/SignUp via Mobile
@@ -41,4 +26,28 @@ class Api::V6::AuthController < ApplicationController
       return
     end
   end
+
+  def platform
+    if params[:vPlatform]
+      params[:vPlatform]
+    else
+      "301"
+    end
+  end
+
+  def os_version
+    if params[:vOSVersion]
+     params[:vOSVersion]
+    elsif params[:vIOSVersion]
+      params[:vIOSVersion]
+    end
+  end
+  def device_version
+    if params[:vDeviceVersion]
+      params[:vDeviceVersion]
+    elsif params[:vIPhoneVersion]
+      params[:vIPhoneVersion]
+    end
+  end
+
 end
